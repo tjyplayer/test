@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>信箱管理系統</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        /* 自定义样式以确保侧边栏占满整个高度 */
+        .sidebar {
+            min-height: 100vh;
+        }
+        .operation-buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边导航栏 -->
+        <nav class="col-md-2 d-md-block bg-dark sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" href="#" id="nav-employees">員工列表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#" id="nav-partners">合作夥伴列表</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- 内容区域 -->
+        <main class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">信箱管理列表</h1>
+            </div>
+            <div id="content">
+                <!-- 内容将通过 JavaScript 动态插入 -->
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+    function fetchEmployees() {
+        // 用 AJAX 从后端获取员工数据
+        $.ajax({
+            url: '/api/employees/test', // 修改为你的实际后端URL
+            type: 'GET',
+            success: function(employees) {
+                var employeesContent = '<h2>員工列表</h2>';
+                employeesContent += '<button class="btn btn-primary mb-2">新增員工</button>';
+                employeesContent += '<table class="table">';
+                employeesContent += '<thead><tr><th>ID</th><th>名字</th><th>性別</th><th>生日</th><th>郵箱</th><th>電話</th><th>地址</th><th>操作</th></tr></thead><tbody>';
+                
+                // 使用获取的数据填充表格
+                $.each(employees, function(index, employee) {
+                    employeesContent += '<tr><td>' + employee.employeeId + '</td><td>' + employee.name + '</td><td>' + employee.gender + '</td><td>' + employee.birthday + '</td><td>' + employee.mail + '</td><td>' + employee.tel + '</td><td>' + employee.address + '</td>';
+                    employeesContent += '<td class="operation-buttons"><button class="btn btn-info btn-sm">變更</button><button class="btn btn-danger btn-sm">刪除</button></td></tr>';
+                });
+
+                employeesContent += '</tbody></table>';
+                $('#content').html(employeesContent);
+            },
+            error: function() {
+                $('#content').html('<p>无法加载员工数据。</p>');
+            }
+        });
+    }
+
+    function fetchPartners() {
+        // 用 AJAX 从后端获取合作伙伴数据
+        $.ajax({
+            url: '/api/partners/test', // 确保与后端控制器中的GetMapping一致
+        type: 'GET',
+        dataType: 'json',
+        success: function(partners) {
+            var partnersContent = '<h2>合作夥伴列表</h2>';
+            partnersContent += '<button class="btn btn-primary mb-2">新增合作夥伴</button>';
+            partnersContent += '<table class="table">';
+            partnersContent += '<thead><tr><th>公司ID</th><th>公司名稱</th><th>銷售代表</th><th>郵箱</th><th>操作</th></tr></thead><tbody>';
+            
+            // 使用获取的数据填充表格
+            $.each(partners, function(index, partner) {
+                partnersContent += '<tr>';
+                partnersContent += '<td>' + partner.comId + '</td>';
+                partnersContent += '<td>' + partner.company + '</td>';
+                partnersContent += '<td>' + partner.salesRep + '</td>';
+                partnersContent += '<td>' + partner.mail + '</td>';
+                partnersContent += '<td class="operation-buttons">';
+                partnersContent += '<button class="btn btn-info btn-sm">變更</button>';
+                partnersContent += '<button class="btn btn-danger btn-sm">刪除</button>';
+                partnersContent += '</td></tr>';
+            });
+
+            partnersContent += '</tbody></table>';
+            $('#content').html(partnersContent);
+        },
+        error: function(request, status, error) {
+            $('#content').html('<p>无法加载合作夥伴数据。错误信息：' + request.responseText + '</p>');
+        }
+        });
+    }
+
+    // 监听导航点击事件
+    $('a.nav-link').on('click', function(e) {
+        e.preventDefault();
+
+        // 激活当前点击的导航项
+        $('a.nav-link').removeClass('active');
+        $(this).addClass('active');
+
+        // 根据点击的导航项加载相应内容
+        var contentHtml = '';
+        if(this.id === 'nav-employees') {
+            fetchEmployees();
+        } else if(this.id === 'nav-partners') {
+            fetchPartners();
+        }
+    });
+
+    // 默认加载员工列表
+    $('#nav-employees').trigger('click');
+});
+</script>
+
+</body>
+</html>
+

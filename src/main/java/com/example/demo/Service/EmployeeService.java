@@ -21,6 +21,9 @@ public class EmployeeService {
     public List<Employee> findByName(String name) {
         return employeeRepository.findByName(name);
     }
+    public List<Employee> findByGender(String gender) {
+        return employeeRepository.findByGender(gender);
+    }
 
     // 其他查詢方法...
 }

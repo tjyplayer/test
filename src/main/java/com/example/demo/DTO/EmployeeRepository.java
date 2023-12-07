@@ -10,5 +10,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // 根據性別查詢員工
     List<Employee> findByGender(String gender);
 
+
+
     // 其他自定義查詢方法...
 }
