@@ -14,6 +14,15 @@
             display: flex;
             justify-content: space-around;
         }
+        .btn-lg { 
+            /* 为按钮添加更大的样式 */
+            font-size: 1.25rem; /* 增加字体大小 */
+            padding: .5rem 1rem; /* 增加内边距 */
+       }
+       .table th, .table td {
+         /* 增加表格中字体的大小 */
+        font-size: 1.2rem;
+       }
     </style>
 </head>
 <body>
@@ -83,10 +92,11 @@ $(document).ready(function() {
                 // 使用获取的数据填充表格
                 $.each(employees, function(index, employee) {
                     employeesContent += '<tr><td><input type="checkbox" class="employee-checkbox"></td><td>' + employee.employeeId + '</td><td>' + employee.name + '</td><td>' + employee.gender + '</td><td>' + employee.birthday + '</td><td>' + employee.mail + '</td><td>' + employee.tel + '</td><td>' + employee.address + '</td>';
-                    employeesContent += '<td class="operation-buttons"><button class="btn btn-info btn-sm">變更</button><button class="btn btn-danger btn-sm">刪除</button></td></tr>';
+                    employeesContent += '<td class="operation-buttons"><button class="btn btn-info btn-sm">變更</button></td></tr>';
                 });
 
                 employeesContent += '</tbody></table>';
+                employeesContent += '<button id="delete-selected-employees" class="btn btn-danger btn-sm btn-lg" style="display:none;">刪除選定</button>';
                 $('#content').html(employeesContent);
             },
             error: function() {
@@ -117,10 +127,11 @@ $(document).ready(function() {
             // 使用获取的数据填充表格
             $.each(partners, function(index, partner) {
                 partnersContent += '<tr><td><input type="checkbox" class="partner-checkbox"></td><td>' + partner.comId + '</td><td>' + partner.company + '</td><td>' + partner.salesRep + '</td><td>' + partner.mail + '</td>';
-                partnersContent += '<td class="operation-buttons"><button class="btn btn-info btn-sm">變更</button><button class="btn btn-danger btn-sm">刪除</button></td></tr>';
+                partnersContent += '<td class="operation-buttons"><button class="btn btn-info btn-sm">變更</button></td></tr>';
             });
 
             partnersContent += '</tbody></table>';
+            partnersContent += '<button id="delete-selected-partners" class="btn btn-danger btn-sm btn-lg" style="display:none;">刪除選定</button>';
             $('#content').html(partnersContent);
         },
         error: function(request, status, error) {
@@ -208,13 +219,47 @@ $(document).ready(function() {
     // 將新增員工和新增合作夥伴的函數綁定到按鈕的點擊事件
     $('#add-employee-btn').click(addEmployee);
     $('#add-partner-btn').click(addPartner);
-    // 全选 Checkbox 逻辑
+        // 当员工全选 Checkbox 状态改变时
     $(document).on('click', '#select-all-employees', function() {
-    $('.employee-checkbox').prop('checked', this.checked);
+        $('.employee-checkbox').prop('checked', this.checked).trigger('change');
     });
+
+    // 当员工列表中的单个 checkbox 状态改变时
+    $(document).on('change', '.employee-checkbox', function() {
+        var anyChecked = $('.employee-checkbox:checked').length > 0;
+        $('#delete-selected-employees').toggle(anyChecked); // 显示或隐藏员工删除按钮
+    });
+
+    // 当点击员工删除按钮时
+    $('#delete-selected-employees').click(function() {
+        var selectedCheckboxes = $('.employee-checkbox:checked');
+        selectedCheckboxes.each(function() {
+            // 员工删除逻辑
+        });
+        $(this).hide();
+    });
+        // 当合作夥伴全选 Checkbox 状态改变时
     $(document).on('click', '#select-all-partners', function() {
-        $('.partner-checkbox').prop('checked', this.checked);
+        $('.partner-checkbox').prop('checked', this.checked).trigger('change');
     });
+
+    // 当合作夥伴列表中的单个 checkbox 状态改变时
+    $(document).on('change', '.partner-checkbox', function() {
+        var anyChecked = $('.partner-checkbox:checked').length > 0;
+        $('#delete-selected-partners').toggle(anyChecked); // 显示或隐藏合作夥伴删除按钮
+    });
+
+    // 当点击合作夥伴删除按钮时
+    $('#delete-selected-partners').click(function() {
+        var selectedCheckboxes = $('.partner-checkbox:checked');
+        selectedCheckboxes.each(function() {
+            // 合作夥伴删除逻辑
+        });
+        $(this).hide();
+    });
+
+
+
 });
 </script>
 
