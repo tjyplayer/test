@@ -110,7 +110,6 @@ $(document).ready(function() {
             partnersContent += '<input type="text" id="partner-mail" placeholder="邮箱">';
             partnersContent += '<button id="add-partner-btn" class="btn btn-primary">新增合作夥伴</button>';
             partnersContent += '</div>';
-            partnersContent += '<button class="btn btn-primary mb-2">新增合作夥伴</button>';
             partnersContent += '<table class="table">';
             partnersContent += '<thead><tr><th>公司ID</th><th>公司名稱</th><th>銷售代表</th><th>郵箱</th><th>操作</th></tr></thead><tbody>';
             
@@ -165,6 +164,10 @@ $(document).ready(function() {
             tel: $('#employee-tel').val(),
             address: $('#employee-address').val()
         };
+        if (!employeeData.name || !employeeData.gender || !employeeData.birthday || !employeeData.mail || !employeeData.tel || !employeeData.address) {
+        alert('新增合作夥伴失敗！所有欄位都必須填寫。');
+        return; // 直接返回，不发送请求
+        }
 
         $.ajax({
             url: '/api/employees/add', // POST 請求對應的後端 URL
@@ -187,6 +190,10 @@ $(document).ready(function() {
             salesRep: $('#partner-salesRep').val(),
             mail: $('#partner-mail').val()
         };
+        if (!partnerData.company || !partnerData.salesRep || !partnerData.mail) {
+        alert('新增合作夥伴失敗！所有欄位都必須填寫。');
+        return; // 直接返回，不发送请求
+        }
 
         $.ajax({
             url: '/api/partners/add', // POST 請求對應的後端 URL
