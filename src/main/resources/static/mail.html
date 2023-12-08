@@ -33,14 +33,15 @@
                 </ul>
             </div>
         </nav>
+        
 
         <!-- 内容区域 -->
         <main class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
                 <h1 class="h2">信箱管理列表</h1>
             </div>
+  
             <div id="content">
-                <!-- 内容将通过 JavaScript 动态插入 -->
             </div>
         </main>
     </div>
@@ -51,6 +52,13 @@
 <script src="js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function() {
+    $(document).on('click', '#add-employee-btn', function() {
+            addEmployee();
+    });
+
+    $(document).on('click', '#add-partner-btn', function() {
+            addPartner();
+    });
     function fetchEmployees() {
         // 用 AJAX 从后端获取员工数据
         $.ajax({
@@ -58,7 +66,15 @@ $(document).ready(function() {
             type: 'GET',
             success: function(employees) {
                 var employeesContent = '<h2>員工列表</h2>';
-                employeesContent += '<button class="btn btn-primary mb-2">新增員工</button>';
+                employeesContent +='<div id="add-employee-form" style="margin-bottom: 15px;">'
+                employeesContent +='<input type="text" id="employee-name" placeholder="名字">'
+                employeesContent +='<input type="text" id="employee-gender" placeholder="性别">'
+                employeesContent +=' <input type="text" id="employee-birthday" placeholder="生日">'
+                employeesContent +='<input type="text" id="employee-mail" placeholder="邮箱">'
+                employeesContent +='<input type="text" id="employee-tel" placeholder="电话">'
+                employeesContent +='<input type="text" id="employee-address" placeholder="地址">'
+                employeesContent += '<button id="add-employee-btn" class="btn btn-primary">新增员工</button>';
+                employeesContent += '</div>'
                 employeesContent += '<table class="table">';
                 employeesContent += '<thead><tr><th>ID</th><th>名字</th><th>性別</th><th>生日</th><th>郵箱</th><th>電話</th><th>地址</th><th>操作</th></tr></thead><tbody>';
                 
@@ -74,10 +90,13 @@ $(document).ready(function() {
             error: function() {
                 $('#content').html('<p>无法加载员工数据。</p>');
             }
+            
         });
     }
 
     function fetchPartners() {
+
+
         // 用 AJAX 从后端获取合作伙伴数据
         $.ajax({
             url: '/api/partners/test', // 确保与后端控制器中的GetMapping一致
@@ -85,6 +104,12 @@ $(document).ready(function() {
         dataType: 'json',
         success: function(partners) {
             var partnersContent = '<h2>合作夥伴列表</h2>';
+            partnersContent += '<div id="add-partner-form" style="margin-bottom: 15px;">';
+            partnersContent += '<input type="text" id="partner-company" placeholder="公司名称">';
+            partnersContent += '<input type="text" id="partner-salesRep" placeholder="销售代表">';
+            partnersContent += '<input type="text" id="partner-mail" placeholder="邮箱">';
+            partnersContent += '<button id="add-partner-btn" class="btn btn-primary">新增合作夥伴</button>';
+            partnersContent += '</div>';
             partnersContent += '<button class="btn btn-primary mb-2">新增合作夥伴</button>';
             partnersContent += '<table class="table">';
             partnersContent += '<thead><tr><th>公司ID</th><th>公司名稱</th><th>銷售代表</th><th>郵箱</th><th>操作</th></tr></thead><tbody>';
@@ -130,6 +155,57 @@ $(document).ready(function() {
 
     // 默认加载员工列表
     $('#nav-employees').trigger('click');
+     // 新增員工的處理函數
+     function addEmployee() {
+        var employeeData = {
+            name: $('#employee-name').val(),
+            gender: $('#employee-gender').val(),
+            birthday: $('#employee-birthday').val(),
+            mail: $('#employee-mail').val(),
+            tel: $('#employee-tel').val(),
+            address: $('#employee-address').val()
+        };
+
+        $.ajax({
+            url: '/api/employees/add', // POST 請求對應的後端 URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(employeeData),
+            success: function(data) {
+                alert('員工新增成功！');
+                fetchEmployees(); // 重新加載員工列表
+            },
+            error: function(error) {
+                alert('新增員工失敗！');
+            }
+        });
+    }
+        // 新增合作夥伴的處理函數
+        function addPartner() {
+        var partnerData = {
+            company: $('#partner-company').val(),
+            salesRep: $('#partner-salesRep').val(),
+            mail: $('#partner-mail').val()
+        };
+
+        $.ajax({
+            url: '/api/partners/add', // POST 請求對應的後端 URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(partnerData),
+            success: function(data) {
+                alert('合作夥伴新增成功！');
+                fetchPartners(); // 重新加載合作夥伴列表
+            },
+            error: function(error) {
+                alert('新增合作夥伴失敗！');
+            }
+        });
+    }
+
+    // 將新增員工和新增合作夥伴的函數綁定到按鈕的點擊事件
+    $('#add-employee-btn').click(addEmployee);
+    $('#add-partner-btn').click(addPartner);
 });
 </script>
 

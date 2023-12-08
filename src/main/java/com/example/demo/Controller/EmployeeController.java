@@ -44,6 +44,17 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    // 添加一个新员工
+    @PostMapping("/add")
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        try {
+            Employee savedEmployee = employeeService.addEmployee(employee);
+            return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace(); // 增加錯誤輸出
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

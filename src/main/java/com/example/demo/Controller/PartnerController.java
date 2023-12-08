@@ -3,12 +3,10 @@ import com.example.demo.DTO.Partner;
 import com.example.demo.Service.PartnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.http.HttpStatus;
+
 
 @RestController
 @RequestMapping("/api/partners")
@@ -34,6 +32,17 @@ public class PartnerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 返回500 Internal Server Error状态
         }
     }
+    @PostMapping("/add")
+    public ResponseEntity<Partner> addPartner(@RequestBody Partner partner) {
+        try {
+            Partner savedPartner = partnerService.addPartner(partner);
+            return new ResponseEntity<>(savedPartner, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace(); // 输出错误信息到控制台
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
     // 其他端点...

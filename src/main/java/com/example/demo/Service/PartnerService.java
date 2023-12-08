@@ -16,4 +16,9 @@ public class PartnerService {
     public List<Partner> findAllPartners() {
         return partnerRepository.findAll();
     }
+    public Partner addPartner(Partner partner) {
+        // 處理新增合作夥伴的邏輯
+        return partnerRepository.save(partner);
+    }
+
 }

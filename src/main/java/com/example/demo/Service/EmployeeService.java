@@ -24,6 +24,11 @@ public class EmployeeService {
     public List<Employee> findByGender(String gender) {
         return employeeRepository.findByGender(gender);
     }
+    // 員工服務
+    public Employee addEmployee(Employee employee) {
+        // 處理新增員工的邏輯
+        return employeeRepository.save(employee);
+    }
 
     // 其他查詢方法...
 }
