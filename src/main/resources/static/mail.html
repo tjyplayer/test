@@ -231,9 +231,10 @@ $(document).ready(function() {
     });
 
     // 当点击员工删除按钮时
-    $('#delete-selected-employees').click(function() {
+    $(document).on('click', '#delete-selected-employees', function() {
         var selectedCheckboxes = $('.employee-checkbox:checked');
         selectedCheckboxes.each(function() {
+            alert('刪除按鈕成功！');
             // 员工删除逻辑
         });
         $(this).hide();
@@ -250,9 +251,10 @@ $(document).ready(function() {
     });
 
     // 当点击合作夥伴删除按钮时
-    $('#delete-selected-partners').click(function() {
+    $(document).on('click', '#delete-selected-partners', function() {
         var selectedCheckboxes = $('.partner-checkbox:checked');
         selectedCheckboxes.each(function() {
+            alert('刪除按鈕成功！');
             // 合作夥伴删除逻辑
         });
         $(this).hide();
