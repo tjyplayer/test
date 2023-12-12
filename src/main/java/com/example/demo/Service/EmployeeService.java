@@ -31,4 +31,7 @@ public class EmployeeService {
     }
 
     // 其他查詢方法...
+    public void deleteEmployeeById(Long id){
+        employeeRepository.deleteById(id);
+    }
 }
